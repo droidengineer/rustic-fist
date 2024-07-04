@@ -1,0 +1,10 @@
+/target
+docs/ui.txt
+demo.tape
+banners.ascii
+src/fist_int.db
+src/fist_int.sql
+src/fist.db
+src/fist.sql
+src/main-orig.rs
+rustic-fist.tape
