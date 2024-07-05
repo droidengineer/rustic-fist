@@ -7,8 +7,11 @@ use nu_ansi_term::{enable_ansi_support, AnsiGenericString, AnsiString, AnsiStrin
 #[macro_use]
 mod prelude;
 use prelude::*;
+mod inc;
+
 use rand::Rng;
 use serde_json::Value;
+
 
 use crate::fist::{Role, Trait};
 mod fist;
@@ -18,7 +21,7 @@ const VERSION: &str = "v0.1.1";
 
 fn main() -> Result<()> {
 
-    let mut stdout = io::stdout();
+    //let mut stdout = io::stdout();
     #[cfg(windows)]
     enable_ansi_support().unwrap();
     let mut dice_pool = DicePool::new_dice(vec![Die::d6(),Die::d6()]);
@@ -46,13 +49,10 @@ fn main() -> Result<()> {
         }
 
         match evaluate_expression(input,&mut dice_pool) {
-            Ok(result) => {},//println!("{}", result)
+            Ok(_) => {},//println!("{}", result)
             Err(err) => println!("Error: {}", err),
         }
-
-
     }
-
 
     Ok(())
 }
@@ -70,7 +70,7 @@ fn prompt() {
         Cyan.bold().paint(ts),
         //LightYellow.paint("║ "),
         //LightYellow.paint("╚»"),        
-        LightYellow.paint("╚✊️ " ),
+        LightYellow.paint("╚👊 "),
         //LightYellow.paint("╠╚✊️ " ),
         //Green.bold().paint("$ "),
     ];
@@ -85,19 +85,6 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
     match tokens.next().unwrap() {
         "banner" => {
             println!("{}",Cyan.bold().paint(random_banner()));
-
-            // for (num,line) in MIAMI_NIGHTS.split('\n').enumerate() {
-            //     if num <=6 {
-            //         println!("{}",Color::Cyan.bold().paint(line));
-            //     } else {
-            //         println!("{}",Color::Magenta.bold().on(Cyan).paint(line));
-            //     }
-            // }
-            // println!("{} 🧛 A {} Setting for neon \'80s vampires, werewolves,\n      witches, and other night creatures.",
-            //     Color::Magenta.bold().on(Cyan).paint("MIAMI NIGHTS"),
-            //     Color::White.bold().paint("FIST Factions"));
-            
-            // cmd_promo(MIAMI_FRIGHTS);
         }
         "bullet" => {
             cmd_bullet();
@@ -123,14 +110,17 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
             match tokens.next() {
                 Some(dice_str) => {
                     println!("dice_str = {}",dice_str);
-                    let mut dp = DicePool::default();
+                    let dp = DicePool::default();
                     for dice in dice_str.split('+') {
                         println!("dice = {}",dice);
                         let dp2 = ok!(DicePool::from_str(dice));
                         println!("{dp2} = DicePool::from_str({})",dice);
-                        println!("{dp2} throws {}",dp2.rand(&mut rng));
+                        println!("{dp2} throws {}",&dp2.rand(&mut rng));
+                        stdout().flush().unwrap();
+
                         dp.add_dice(dp2.dice());
-                        println!("{dp} after adding {dice}");
+                        println!("{dp} after adding {dice}");        stdout().flush().unwrap();
+
 
                     }
                     println!("{dp} = {}",dp.rand(&mut rng));
@@ -146,12 +136,14 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
             match tokens.next() {
                 Some(subcmd) => {
                     match subcmd.to_lowercase().as_str() {
-                        "ls" => {print_help(HELP_CMD_LS)},
-                        "search" => {print_help(HELP_CMD_SEARCH)},
-                        "random" => {},
-                        "roll" => {},
-                        "dicepool" => {}
-                        _ => {}
+                        "ls" => {print_help(inc::HELP_CMD_LS)},
+                        "search" => {print_help(inc::HELP_CMD_SEARCH)},
+                        "random" => {print_help(inc::HELP_CMD_RANDOM)},
+                        "roll" => {print_help(inc::HELP_CMD_ROLL)},
+                        "dicepool" => {print_help(inc::HELP_CMD_DICEPOOL)}
+                        _ => {
+                            println!("There is no specific help for {subcmd}");
+                        }
                     }
                 },
                 None => cmd_help(),
@@ -161,7 +153,8 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
             // if tokens.len() != 3 {
             //     return Ok(format!("Wrong number of arguments({}): search <arg> <target>",tokens.len()));
             // }
-            match tokens.next().unwrap() {
+        if let Some(tok) = tokens.next() {
+            match tok { //tokens.next().unwrap() {
                 "role"|"roles" => {
                     if let Some(role) = tokens.next() { 
                         let role = role.to_uppercase();
@@ -218,13 +211,10 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
 
                 }
             }
-        }
+        }}
+    
         "test" => {
-            println!(" Mode Owner Bytes Tables  Matrix Name");
-            println!("┌────────────────────────────────────────────");
-            for i in MATRIX_LIST {
-                gen_byte_entries(i);
-            }
+
 
         }
         "random"|"rnd" => {
@@ -265,54 +255,6 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
             
                         },
                         "enemy" => {
-                            // for line in PREMADE_ENEMY.split('\n') {
-                            //     println!("{line}");
-                            // }
-                            // //
-                            // println!("{}",White.bold().paint("╔═══════════════════════════════════════════════════════════════════════════════════╗"));
-                            // println!("{}",White.bold().paint("║ ANTAREAN WARPRIEST (6 HP)                                                         ║"));
-                            // println!("{}",White.bold().paint("╠═══════════════════════════════════════════════════════════════════════════════════╣"));
-
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Cyan.bold().paint("* Laser rifle, long, slim, and chrome (1D6+1 DAMAGE)                              "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Cyan.bold().paint("* Metallic staff (1D6 DAMAGE, NON-LETHAL)                                         "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Cyan.bold().paint("* Battle-trance herbs (stop the trance, one use)                                  "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}",White.bold().paint("╠═══════════════════════════════════════════════════════════════════════════════════╣"));
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Purple.bold().paint("TRANCE: Antarean Warpriests can be found in stasis, frozen in drop pods planted   "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Purple.bold().paint("on Earth from orbit 10,000 years ago, never opened due to a small but detrimental "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Purple.bold().paint("programming error. Upon leaving stasis, Warpriests enter a battle-trance which    "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}", AnsiStrings( &[
-                            //     White.bold().paint("║ "),
-                            //     Purple.bold().paint("grants them 3 ARMOR for as long as it lasts. Only the herbs can break the trance. "),
-                            //     White.bold().paint("║"),
-                            // ]));
-                            // println!("{}",White.bold().paint("╚═══════════════════════════════════════════════════════════════════════════════════╝"));
-                            // println!();
-
-
                             //let mut data = fs::read_to_string(CHARACTERS_PREMADE_ENEMIES).unwrap();
                             //let npcs: Vec<Premade> = serde_json::from_str(&data)?;
                             let npcs = load_premade(CHARACTERS_PREMADE_ENEMIES)?;
@@ -322,8 +264,6 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
                             println!("{}",npcs[rnd_idx]);
                         },
                         "npc" => {
-                                let mut data = fs::read_to_string(CHARACTERS_PREMADE_NPCS).unwrap();
-                                //let npcs: Vec<Premade> = serde_json::from_str(&data)?;
                                 let npcs = load_premade(CHARACTERS_PREMADE_NPCS)?;
                                 let mut rng = rand::thread_rng();
                                 let rnd_idx = rng.gen_range(0..npcs.len());
@@ -331,11 +271,28 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
                                 println!("{}",npcs[rnd_idx]);
                         },
                         "mission_prompt" => {
-                            // let mp = load_matrix(MISSION_PROMPTS)?;
-                            // let mp = &mp[0];
-                            // println!(" 🕵️ {}",load_matrix(MISSION_PROMPTS)?.);
+                            let mp = load_matrix(MISSION_PROMPTS)?;
+                            // let mut rng = rand::thread_rng();
+                            // let rnd_idx = rng.gen_range(0..mp[0].rand_value());
+
+                            println!(" 🕵️ {}",Color::Green.bold().paint(mp[0].rand_value().1.as_str().unwrap()));
 
                         },
+                        "mission" => {
+                            let m = load_matrix(MISSION_GENERATOR)?;
+                            //let mut rng = rand::thread_rng();
+                            //let rnd_idx = rng.gen_range(0..m[0].Values.len());
+                            //m.iter().take(m.len() -1)
+                            for i in 0..m.len() {
+                                let (k,v) = m[i].rand_value();
+                                println!(" {} {} 🎲 [{}]",
+                                    Color::White.bold().paint(m[i].Title.clone()),
+                                    Color::Green.bold().paint(v.as_str().unwrap()),
+                                    Color::Cyan.bold().paint(format!("{}",k)),
+                                );                               
+                            }
+
+                        }
                         _ => {}
                     }
                 }
@@ -354,32 +311,45 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
                             for role in r.as_slice() {
                                 println!("{}",role);
                             }
-                            println!("{} total roles.",r.len());
+                            println!(" \x1b[1;37m{}\x1b[0m total roles.",r.len());
                         }
                         "traits" => {
                             let t = load_traits(TRAITS)?;
                             for tr in t.as_slice() {
                                 println!("{}",tr);
                             }
-                            println!("{} total traits.",t.len());                    
+                            println!(" \x1b[1;37m{}\x1b[0m total traits.",t.len());                    
+                        }
+                        "cassettes" => {
+                            let mut data = fs::read_to_string(CASSETTES).unwrap();
+
+                            let v: Vec<String> = serde_json::from_str(&data)?;
+                            for c in v {
+                                println!("{c}");
+                            }
                         }
                         "cassette_links" => {
                             let data = fs::read_to_string(CASSETTE_LINKS).unwrap();                           
                             let t:HashMap<String, String> = serde_json::from_str(&data).unwrap();
                             for tr in &t {
-                                println!("\x1b[1;32m{} 🔗 \x1b[1;34m{}",tr.0,tr.1);
+                                println!("\x1b[1;32m{} 🔗 \x1b[1;34m{}\x1b[0m",tr.0,tr.1);
                             }
-                            println!("{} total cassette links.",t.len());                    
+                            stdout().flush()?;
+                            println!(" \x1b[1;37m{}\x1b[0m total cassette links.",t.len());                    
                         }                        
-                        "world/hazards" => {
-                            let t = load_matrix(WORLD_HAZARDS)?;
-                            for tr in t.as_slice() {
-                                println!("{}",tr);
-                            }
-                            println!("{} total tables.",t.len())                      
-                        }
+
         
-                        _ => {}
+                        d@_ => {
+                            // TODO need path to json
+                            //let p = t.clone();
+                            let path = ALL_FILES.iter().find(|p| get_filename(p) == d).unwrap();
+                            let tr = load_matrix(path)?;
+                            for trm in tr.as_slice() {
+                                println!("{}",trm);
+                            }
+                            println!(" \x1b[1;37m{}\x1b[0m total tables.",tr.len())                      
+
+                        }
                     }
                 },
                 None => {
@@ -451,8 +421,6 @@ fn cmd_help() {
         Blue.bold().paint("help   "),
 
     ];
-//    println!("    {}   {}           {}",Blue.bold().paint("help"),Blue.paint("[cmd]"),White.paint("Prints this help or specific help for [cmd]"));
-//    println!("    {}   {}           {}",LightBlue.bold().paint("help"),LightBlue.paint("<arg>"),White.bold().paint("Generates random selection for <arg>"));
     println!("{}", AnsiStrings( &[
         Color::Yellow.paint("rustic-fist "),
         Color::Cyan.paint(VERSION),
@@ -467,9 +435,11 @@ fn cmd_ls(path: &str) {
     if path.is_empty() {
         println!("{}",Color::Yellow.bold().paint(" Mode Owner Bytes Tables  Matrix Name"));
         println!("{}",Color::White.bold().paint("┌────────────────────────────────────────────"));
+        
         for i in ALL_FILES {
             gen_byte_entries(i)
         }
+        println!("\x1b[1;37m{}\x1b[0m total matrices.", ALL_FILES.len())
     }
 }
 
@@ -478,9 +448,10 @@ fn banner() {
     println!("{}",Yellow.paint("Copyright (c) Convoluted Systems, LLC."));
     println!("This is {} software.",White.bold().paint("OPEN SOURCE"));
 
-    for line in random_banner().split('\n') {
-        println!("{}",Color::Green.bold().paint(line));
-    }
+    home_banner();
+    // for line in random_banner().split('\n') {
+    //     println!("{}",Color::Green.bold().paint(line));
+    // }
     println!("Type {} for commands or {} to exit the shell.",Blue.bold().paint("help"),Blue.bold().paint("quit"));
 }
 
@@ -497,16 +468,18 @@ fn old_credits() {
     let link = Color::Blue.bold().underline().paint("https://ululu.itch.io/fist-json-data").hyperlink("https://ululu.itch.io/fist-json-data");
     println!(" 🔗 {link}");
 
-    println!("🏳️‍🌈 Developed during Pride Month 🏳️‍🌈");    
+    println!("🏳️‍🌈 Developed during Pride Month 🏳️‍🌈");
+    println!();  
 }
 fn credits() {
-    println!("{}", AnsiStrings(&[
-        LightYellow.bold().paint("╠═════╡ "),
-        Yellow.bold().paint("CREDITS"),
-    ]));
+    // println!("{}", AnsiStrings(&[
+    //     LightYellow.bold().paint("╔═════╡ "),
+    //     Yellow.bold().paint("CREDITS"),
+    // ]));
+    //old_credits();
 
     println!("{}", AnsiStrings(&[
-        LightYellow.bold().paint("╠═════╡ "),
+        LightYellow.bold().paint("╔═════» "),
         Yellow.paint("rustic-fist "),
         Color::Default.paint("by Gian James"),
     ]));
@@ -516,7 +489,7 @@ fn credits() {
         Color::Blue.bold().underline().paint("https://github.com/droidengineer/rustic-fist").hyperlink("https://github.com/droidengineer/"),                
     ]));
     println!("{}", AnsiStrings(&[
-        LightYellow.bold().paint("╠═════╡ "),
+        LightYellow.bold().paint("╠═════» "),
         White.bold().paint("FIST:Ultimate "),
         Color::Default.paint("by B. Everett Dutton"),
     ]));
@@ -525,7 +498,7 @@ fn credits() {
         Color::Blue.bold().underline().paint("https://claymorerpgs.itch.io/fist").hyperlink("https://claymorerpgs.itch.io/fist"),
     ]));
     println!("{}", AnsiStrings(&[                
-        LightYellow.bold().paint("╠═════╡ "),
+        LightYellow.bold().paint("╠═════» "),
         Purple.bold().paint("FIST JSON Data "),
         Color::Default.paint("by ululu")
     ]));
@@ -534,8 +507,10 @@ fn credits() {
         Color::Blue.bold().underline().paint("https://ululu.itch.io/fist-json-data").hyperlink("https://ululu.itch.io/fist-json-data"),
     ]));
     println!("{}", AnsiStrings(&[
-        LightYellow.bold().paint("╚═════╡ 🏳️‍🌈 Developed during Pride Month 🏳️‍🌈"),
-
+        Yellow.bold().paint("╚═════╡ "),
+        Default.paint("🏳️‍🌈"),
+        White.bold().paint(" Developed during Pride Month "),
+        Default.paint("🏳️‍🌈"),
     ]));
     println!();
 }
