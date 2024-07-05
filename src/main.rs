@@ -293,6 +293,11 @@ fn evaluate_expression(expr: &str, dice_pool: &mut DicePool) -> Result<String> {
                             }
 
                         }
+                        "banner" => {
+                            for line in random_banner().split('\n') {
+                                println!("{}",Color::Cyan.bold().paint(line));
+                            }                           
+                        }
                         _ => {}
                     }
                 }
@@ -444,14 +449,14 @@ fn cmd_ls(path: &str) {
 }
 
 fn banner() {
+    print!("{}[2J",27 as char);
     println!("\n\n\n{} {}",Yellow.paint(APP_NAME),Cyan.bold().paint(VERSION));
     println!("{}",Yellow.paint("Copyright (c) Convoluted Systems, LLC."));
     println!("This is {} software.",White.bold().paint("OPEN SOURCE"));
+    println!();
 
     home_banner();
-    // for line in random_banner().split('\n') {
-    //     println!("{}",Color::Green.bold().paint(line));
-    // }
+    println!();
     println!("Type {} for commands or {} to exit the shell.",Blue.bold().paint("help"),Blue.bold().paint("quit"));
 }
 

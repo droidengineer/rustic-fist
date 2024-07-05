@@ -355,7 +355,7 @@ impl Default for DicePool {
 
 
 pub fn home_banner() {
-    println!("{}{} {} {}{}  {}{}      {}{} {}      {}",
+    println!("{}{}\x1b[0m {}\x1b[0m {}{}\x1b[0m  {}{}\x1b[0m      {}{}\x1b[0m {}\x1b[0m      {}\x1b[0m",
         Color::White.bold().on(Color::LightBlue).paint(":::"),
         Color::Red.bold().on(Color::White).paint("====="),
         Color::White.bold().on(Color::LightBlue).paint(":::"),
