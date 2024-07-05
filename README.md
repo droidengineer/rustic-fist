@@ -1,5 +1,6 @@
 # Rustic FIST
 
+![Trailer](rustic-fist-july4-1.png)
 ⚠️ This project is in pre-release and is wired to crash for testing purposes, yeah, that's it. No, but seriously, it is.
 
 This project, written in Rust, implements a command-line application to query and generate data for the [FIST: Ultimate RPG](https://claymorerpgs.itch.io/) by [Claymore Roleplaying Games](http://claymorerpgs.com/). It's just a *silly thing* for those who still like command-line terminals:
