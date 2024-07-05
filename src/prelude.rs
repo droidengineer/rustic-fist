@@ -2,7 +2,7 @@
 //! TODO docs
 
 
-use std::{collections::HashMap, env, fmt::{Display, Error}, fs, io::{stdout, Write}, path::Path, str::FromStr};
+use std::{collections::HashMap, fmt::{Display, Error}, fs, path::Path, str::FromStr};
 
 use nu_ansi_term::{Color, Rgb};
 use regex::Regex;

@@ -5,7 +5,7 @@
 
 This project, written in Rust, implements a command-line application to query and generate data for the [FIST: Ultimate RPG](https://claymorerpgs.itch.io/) by [Claymore Roleplaying Games](http://claymorerpgs.com/). It's just a *silly thing* for those who still like command-line terminals:
 
-* access *FIST: Ultimate Supply Depot* tables using metaphore of a filesystem
+* access *FIST: Ultimate Supply Depot* tables using metaphor of a filesystem
 * search roles, traits, and anything else within the FIST: Ultimate rulebook.
 * generate random roles, traits, and anything else within the FIST: Ultimate rulebook.
 * ~~create, edit, remove roles, traits, tags, gear, and characters~~
