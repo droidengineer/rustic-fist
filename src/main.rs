@@ -65,7 +65,7 @@ fn prompt() {
     let p: &[AnsiString<'static>] = &[
         LightYellow.paint("╔════╡"),
         //LightYellow.paint("╔══╡✊🤜"),
-        White.bold().paint("FIST:Ultimate Shell"),
+        White.bold().paint("FIST: Ultra Shell"),
         LightYellow.paint("╞═══════════════════════════════════════════╡"),
         Cyan.bold().paint(ts),
         //LightYellow.paint("║ "),
@@ -465,7 +465,7 @@ fn old_credits() {
     let link = Color::Blue.bold().underline().paint("https://github.com/droidengineer/rustic-fist").hyperlink("https://github.com/droidengineer/");
     println!(" 🔗 {link}");
 
-    println!("{} written by B. Everett Dutton.",Color::White.bold().paint("FIST:Ultimate"));
+    println!("{} written by B. Everett Dutton.",Color::White.bold().paint("FIST: Ultra"));
     let link = Color::Blue.bold().underline().paint("https://claymorerpgs.itch.io/fist").hyperlink("https://claymorerpgs.itch.io/fist");
     println!(" 🔗 {link}");
 
@@ -495,7 +495,7 @@ fn credits() {
     ]));
     println!("{}", AnsiStrings(&[
         LightYellow.bold().paint("╠═════» "),
-        White.bold().paint("FIST:Ultimate "),
+        White.bold().paint("FIST: Ultra "),
         Color::Default.paint("by B. Everett Dutton"),
     ]));
     println!("{}", AnsiStrings(&[
